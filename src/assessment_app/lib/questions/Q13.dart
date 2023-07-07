@@ -178,10 +178,33 @@ class TestPageState extends State<Q13> {
                 ElevatedButton.icon(
                     onPressed: enable
                         ? () {
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const Q14()));
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('確定?'),
+                                    actions: [
+                                      TextButton(
+                                        child: const Text('否'),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                      TextButton(
+                                        child: const Text('是'),
+                                        onPressed: () {
+                                          Navigator.pushAndRemoveUntil<void>(
+                                              context,
+                                              MaterialPageRoute<void>(
+                                                  builder:
+                                                      (BuildContext context) =>
+                                                          const Q14()),
+                                              ModalRoute.withName('/'));
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                });
                           }
                         : null,
                     icon: const Icon(Icons.arrow_right_alt_outlined),

@@ -94,8 +94,8 @@ class TestPageState extends State<Q10> {
                     child: Image.asset(
                       'assets/images/redflower.png',
                       fit: BoxFit.contain,
-                      height: 225,
-                      width: 225,
+                      height: 250,
+                      width: 250,
                     ),
                   ),
                 ),
@@ -116,8 +116,8 @@ class TestPageState extends State<Q10> {
                     child: Image.asset(
                       'assets/images/yellowflowers.png',
                       fit: BoxFit.contain,
-                      height: 275,
-                      width: 275,
+                      height: 250,
+                      width: 250,
                     ),
                   ),
                 ),
@@ -151,10 +151,33 @@ class TestPageState extends State<Q10> {
                 ElevatedButton.icon(
                     onPressed: enable
                         ? () {
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const Q11()));
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('確定?'),
+                                    actions: [
+                                      TextButton(
+                                        child: const Text('否'),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                      TextButton(
+                                        child: const Text('是'),
+                                        onPressed: () {
+                                          Navigator.pushAndRemoveUntil<void>(
+                                              context,
+                                              MaterialPageRoute<void>(
+                                                  builder:
+                                                      (BuildContext context) =>
+                                                          const Q11()),
+                                              ModalRoute.withName('/'));
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                });
                           }
                         : null,
                     icon: const Icon(Icons.arrow_right_alt_outlined),
