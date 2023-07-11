@@ -96,7 +96,7 @@ class Instructions extends State<Instruction> {
                       color: isSelected[1] ? Colors.blue : Colors.transparent,
                     ),
                     child: Image.asset(
-                      'assets/images/smallapple.png',
+                      'assets/images/apple2.png',
                       height: 250,
                       width: 250,
                     ),

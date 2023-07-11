@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:assessment_app/screens/home.dart';
 import 'package:assessment_app/questions/Q27.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Q26 extends StatefulWidget {
   const Q26({super.key});
@@ -16,8 +17,15 @@ class TestPageState extends State<Q26> {
   static const String appBarTitle = '語法理解';
   // ignore: unused_field
 
-  int _score = 0; //score for assessment in future
-  int _submissions = 0;
+  //score for assessment in future
+  int score = 0; //score for assessment in future
+
+  void incScore() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int newscore = score + 1;
+    prefs.setInt('score', newscore);
+  }
+
   bool enable =
       false; //default state for submit is now allowed. button changes when option is selected
   List<bool> isSelected = [false, false, false];

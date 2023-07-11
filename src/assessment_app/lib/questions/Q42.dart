@@ -16,8 +16,8 @@ class TestPageState extends State<Q42> {
   static const String appBarTitle = '語法理解';
   // ignore: unused_field
 
-  int _score = 0; //score for assessment in future
-  int _submissions = 0;
+  //score for assessment in future
+
   bool enable =
       false; //default state for submit is now allowed. button changes when option is selected
   List<bool> isSelected = [false, false, false];
