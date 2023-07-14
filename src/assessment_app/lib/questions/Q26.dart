@@ -3,11 +3,18 @@
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:assessment_app/screens/home.dart';
+import 'package:assessment_app/questions/Q1.dart';
 import 'package:assessment_app/questions/Q27.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Q26 extends StatefulWidget {
-  const Q26({super.key});
+  final int questionsAnswered;
+  final int correctAnswer;
+
+  const Q26({
+    Key? key,
+    required this.questionsAnswered,
+    required this.correctAnswer,
+  }) : super(key: key);
 
   @override
   TestPageState createState() => TestPageState();
@@ -18,23 +25,23 @@ class TestPageState extends State<Q26> {
   // ignore: unused_field
 
   //score for assessment in future
-  int score = 0; //score for assessment in future
-
-  void incScore() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    int newscore = score + 1;
-    prefs.setInt('score', newscore);
-  }
 
   bool enable =
       false; //default state for submit is now allowed. button changes when option is selected
-  List<bool> isSelected = [false, false, false];
+  List<bool> isSelected = [false, false];
 
   void canbeSubmitted() {
     if (enable = false) {
       enable = true;
     }
     setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    questionsAnswered = widget.questionsAnswered;
+    correctAnswer = widget.correctAnswer;
   }
 
   @override
@@ -61,17 +68,9 @@ class TestPageState extends State<Q26> {
                     setState(() {
                       isSelected[0] = true;
                       isSelected[1] = false;
-                      isSelected[2] = false;
                       enable = true;
                     });
-                  },
-                  onTapCancel: () {
-                    setState(() {
-                      isSelected[0] = false;
-                      isSelected[1] = false;
-                      isSelected[2] = false;
-                      enable = false;
-                    });
+                    correctAnswer++;
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -91,7 +90,6 @@ class TestPageState extends State<Q26> {
                     setState(() {
                       isSelected[0] = false;
                       isSelected[1] = true;
-                      isSelected[2] = false;
                       enable = true;
                     });
                   },
@@ -101,28 +99,6 @@ class TestPageState extends State<Q26> {
                     ),
                     child: Image.asset(
                       'assets/images/car2.png',
-                      fit: BoxFit.contain,
-                      height: 250,
-                      width: 250,
-                    ),
-                  ),
-                ),
-                const Spacer(),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      isSelected[0] = false;
-                      isSelected[1] = false;
-                      isSelected[2] = true;
-                      enable = true;
-                    });
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: isSelected[2] ? Colors.blue : Colors.transparent,
-                    ),
-                    child: Image.asset(
-                      'assets/images/car3.png',
                       fit: BoxFit.contain,
                       height: 250,
                       width: 250,
@@ -174,12 +150,18 @@ class TestPageState extends State<Q26> {
                                       TextButton(
                                         child: const Text('是'),
                                         onPressed: () {
+                                          questionsAnswered++;
                                           Navigator.pushAndRemoveUntil<void>(
                                               context,
                                               MaterialPageRoute<void>(
                                                   builder:
                                                       (BuildContext context) =>
-                                                          const Q27()),
+                                                          Q27(
+                                                            questionsAnswered:
+                                                                questionsAnswered,
+                                                            correctAnswer:
+                                                                correctAnswer,
+                                                          )),
                                               ModalRoute.withName('/'));
                                         },
                                       ),

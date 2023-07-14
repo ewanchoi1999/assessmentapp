@@ -1,13 +1,20 @@
 // ignore_for_file: prefer_final_fields
 
+import 'package:assessment_app/questions/Q1.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:assessment_app/screens/home.dart';
 import 'package:assessment_app/questions/Q4.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Q3 extends StatefulWidget {
-  const Q3({super.key});
+  final int questionsAnswered;
+  final int correctAnswer;
+
+  const Q3({
+    Key? key,
+    required this.questionsAnswered,
+    required this.correctAnswer,
+  }) : super(key: key);
 
   @override
   TestPageState createState() => TestPageState();
@@ -16,14 +23,6 @@ class Q3 extends StatefulWidget {
 class TestPageState extends State<Q3> {
   static const String appBarTitle = '語法理解';
   // ignore: unused_field
-
-  int score = 0; //score for assessment in future
-
-  void incScore() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    int newscore = score + 1;
-    prefs.setInt('score', newscore);
-  }
 
   bool enable =
       false; //default state for submit is now allowed. button changes when option is selected
@@ -34,6 +33,13 @@ class TestPageState extends State<Q3> {
       enable = true;
     }
     setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    questionsAnswered = widget.questionsAnswered;
+    correctAnswer = widget.correctAnswer;
   }
 
   @override
@@ -64,14 +70,6 @@ class TestPageState extends State<Q3> {
                       enable = true;
                     });
                   },
-                  onTapCancel: () {
-                    setState(() {
-                      isSelected[0] = false;
-                      isSelected[1] = false;
-                      isSelected[2] = false;
-                      enable = false;
-                    });
-                  },
                   child: Container(
                     decoration: BoxDecoration(
                       color: isSelected[0] ? Colors.blue : Colors.transparent,
@@ -93,7 +91,7 @@ class TestPageState extends State<Q3> {
                       isSelected[2] = false;
                       enable = true;
                     });
-                    incScore();
+                    correctAnswer++;
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -174,12 +172,18 @@ class TestPageState extends State<Q3> {
                                       TextButton(
                                         child: const Text('是'),
                                         onPressed: () {
+                                          questionsAnswered++;
                                           Navigator.pushAndRemoveUntil<void>(
                                               context,
                                               MaterialPageRoute<void>(
                                                   builder:
                                                       (BuildContext context) =>
-                                                          const Q4()),
+                                                          Q4(
+                                                            questionsAnswered:
+                                                                questionsAnswered,
+                                                            correctAnswer:
+                                                                correctAnswer,
+                                                          )),
                                               ModalRoute.withName('/'));
                                         },
                                       ),

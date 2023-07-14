@@ -3,10 +3,18 @@
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:assessment_app/screens/home.dart';
+import 'package:assessment_app/questions/Q1.dart';
 import 'package:assessment_app/questions/Q40.dart';
 
 class Q39 extends StatefulWidget {
-  const Q39({super.key});
+  final int questionsAnswered;
+  final int correctAnswer;
+
+  const Q39({
+    Key? key,
+    required this.questionsAnswered,
+    required this.correctAnswer,
+  }) : super(key: key);
 
   @override
   TestPageState createState() => TestPageState();
@@ -27,6 +35,13 @@ class TestPageState extends State<Q39> {
       enable = true;
     }
     setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    questionsAnswered = widget.questionsAnswered;
+    correctAnswer = widget.correctAnswer;
   }
 
   @override
@@ -55,14 +70,6 @@ class TestPageState extends State<Q39> {
                       isSelected[1] = false;
                       isSelected[2] = false;
                       enable = true;
-                    });
-                  },
-                  onTapCancel: () {
-                    setState(() {
-                      isSelected[0] = false;
-                      isSelected[1] = false;
-                      isSelected[2] = false;
-                      enable = false;
                     });
                   },
                   child: Container(
@@ -108,6 +115,7 @@ class TestPageState extends State<Q39> {
                       isSelected[2] = true;
                       enable = true;
                     });
+                    correctAnswer++;
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -166,12 +174,18 @@ class TestPageState extends State<Q39> {
                                       TextButton(
                                         child: const Text('是'),
                                         onPressed: () {
+                                          questionsAnswered++;
                                           Navigator.pushAndRemoveUntil<void>(
                                               context,
                                               MaterialPageRoute<void>(
                                                   builder:
                                                       (BuildContext context) =>
-                                                          const Q40()),
+                                                          Q40(
+                                                            questionsAnswered:
+                                                                questionsAnswered,
+                                                            correctAnswer:
+                                                                correctAnswer,
+                                                          )),
                                               ModalRoute.withName('/'));
                                         },
                                       ),

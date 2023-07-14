@@ -3,12 +3,18 @@
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:assessment_app/screens/home.dart';
+import 'package:assessment_app/questions/Q1.dart';
 import 'package:assessment_app/questions/Q26.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Q25 extends StatefulWidget {
-  const Q25({super.key});
+  final int questionsAnswered;
+  final int correctAnswer;
 
+  const Q25({
+    Key? key,
+    required this.questionsAnswered,
+    required this.correctAnswer,
+  }) : super(key: key);
   @override
   TestPageState createState() => TestPageState();
 }
@@ -18,13 +24,6 @@ class TestPageState extends State<Q25> {
   // ignore: unused_field
 
   //score for assessment in future
-  int score = 0; //score for assessment in future
-
-  void incScore() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    int newscore = score + 1;
-    prefs.setInt('score', newscore);
-  }
 
   bool enable =
       false; //default state for submit is now allowed. button changes when option is selected
@@ -35,6 +34,13 @@ class TestPageState extends State<Q25> {
       enable = true;
     }
     setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    questionsAnswered = widget.questionsAnswered;
+    correctAnswer = widget.correctAnswer;
   }
 
   @override
@@ -65,14 +71,6 @@ class TestPageState extends State<Q25> {
                       enable = true;
                     });
                   },
-                  onTapCancel: () {
-                    setState(() {
-                      isSelected[0] = false;
-                      isSelected[1] = false;
-                      isSelected[2] = false;
-                      enable = false;
-                    });
-                  },
                   child: Container(
                     decoration: BoxDecoration(
                       color: isSelected[0] ? Colors.blue : Colors.transparent,
@@ -94,7 +92,7 @@ class TestPageState extends State<Q25> {
                       isSelected[2] = false;
                       enable = true;
                     });
-                    incScore();
+                    correctAnswer++;
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -175,12 +173,18 @@ class TestPageState extends State<Q25> {
                                       TextButton(
                                         child: const Text('是'),
                                         onPressed: () {
+                                          questionsAnswered++;
                                           Navigator.pushAndRemoveUntil<void>(
                                               context,
                                               MaterialPageRoute<void>(
                                                   builder:
                                                       (BuildContext context) =>
-                                                          const Q26()),
+                                                          Q26(
+                                                            questionsAnswered:
+                                                                questionsAnswered,
+                                                            correctAnswer:
+                                                                correctAnswer,
+                                                          )),
                                               ModalRoute.withName('/'));
                                         },
                                       ),

@@ -4,7 +4,10 @@ import 'package:assessment_app/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:assessment_app/questions/Q2.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
+int questionsAnswered = 0;
+int wrongAnswer = 0;
+int correctAnswer = 0;
 
 class Q1 extends StatefulWidget {
   const Q1({super.key});
@@ -16,14 +19,6 @@ class Q1 extends StatefulWidget {
 class TestPageState extends State<Q1> {
   static const String appBarTitle = '語法理解';
   // ignore: unused_field
-
-  int score = 0; //score for assessment in future
-
-  void incScore() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    int newscore = score + 1;
-    prefs.setInt('score', newscore);
-  }
 
   bool enable =
       false; //default state for submit is now allowed. button changes when option is selected
@@ -64,14 +59,6 @@ class TestPageState extends State<Q1> {
                       enable = true;
                     });
                   },
-                  onTapCancel: () {
-                    setState(() {
-                      isSelected[0] = false;
-                      isSelected[1] = false;
-                      isSelected[2] = false;
-                      enable = false;
-                    });
-                  },
                   child: Container(
                     decoration: BoxDecoration(
                       color: isSelected[0] ? Colors.blue : Colors.transparent,
@@ -93,6 +80,7 @@ class TestPageState extends State<Q1> {
                       isSelected[2] = false;
                       enable = true;
                     });
+                    correctAnswer++;
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -115,7 +103,6 @@ class TestPageState extends State<Q1> {
                       isSelected[2] = true;
                       enable = true;
                     });
-                    incScore();
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -173,12 +160,16 @@ class TestPageState extends State<Q1> {
                                       TextButton(
                                         child: const Text('是'),
                                         onPressed: () {
+                                          questionsAnswered++;
                                           Navigator.pushAndRemoveUntil<void>(
                                               context,
                                               MaterialPageRoute<void>(
-                                                  builder:
-                                                      (BuildContext context) =>
-                                                          const Q2()),
+                                                  builder: (context) => Q2(
+                                                        questionsAnswered:
+                                                            questionsAnswered,
+                                                        correctAnswer:
+                                                            correctAnswer,
+                                                      )),
                                               ModalRoute.withName('/'));
                                         },
                                       ),

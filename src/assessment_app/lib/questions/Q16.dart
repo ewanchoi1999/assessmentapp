@@ -3,11 +3,18 @@
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:assessment_app/screens/home.dart';
+import 'package:assessment_app/questions/Q1.dart';
 import 'package:assessment_app/questions/Q17.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Q16 extends StatefulWidget {
-  const Q16({super.key});
+  final int questionsAnswered;
+  final int correctAnswer;
+
+  const Q16({
+    Key? key,
+    required this.questionsAnswered,
+    required this.correctAnswer,
+  }) : super(key: key);
 
   @override
   TestPageState createState() => TestPageState();
@@ -17,13 +24,6 @@ class TestPageState extends State<Q16> {
   static const String appBarTitle = '語法理解';
   // ignore: unused_field
 
-  int score = 0; //score for assessment in future
-
-  void incScore() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    int newscore = score + 1;
-    prefs.setInt('score', newscore);
-  }
   //score for assessment in future
 
   bool enable =
@@ -35,6 +35,13 @@ class TestPageState extends State<Q16> {
       enable = true;
     }
     setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    questionsAnswered = widget.questionsAnswered;
+    correctAnswer = widget.correctAnswer;
   }
 
   @override
@@ -63,14 +70,6 @@ class TestPageState extends State<Q16> {
                       isSelected[1] = false;
                       isSelected[2] = false;
                       enable = true;
-                    });
-                  },
-                  onTapCancel: () {
-                    setState(() {
-                      isSelected[0] = false;
-                      isSelected[1] = false;
-                      isSelected[2] = false;
-                      enable = false;
                     });
                   },
                   child: Container(
@@ -116,7 +115,7 @@ class TestPageState extends State<Q16> {
                       isSelected[2] = true;
                       enable = true;
                     });
-                    incScore();
+                    correctAnswer++;
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -175,12 +174,18 @@ class TestPageState extends State<Q16> {
                                       TextButton(
                                         child: const Text('是'),
                                         onPressed: () {
+                                          questionsAnswered++;
                                           Navigator.pushAndRemoveUntil<void>(
                                               context,
                                               MaterialPageRoute<void>(
                                                   builder:
                                                       (BuildContext context) =>
-                                                          const Q17()),
+                                                          Q17(
+                                                            questionsAnswered:
+                                                                questionsAnswered,
+                                                            correctAnswer:
+                                                                correctAnswer,
+                                                          )),
                                               ModalRoute.withName('/'));
                                         },
                                       ),

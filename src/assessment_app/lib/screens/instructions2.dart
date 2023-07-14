@@ -44,14 +44,6 @@ class Instructions extends State<Instruction2> {
                       enable = true;
                     });
                   },
-                  onTapCancel: () {
-                    setState(() {
-                      isSelected[0] = false;
-                      isSelected[1] = false;
-                      isSelected[2] = false;
-                      enable = false;
-                    });
-                  },
                   child: Container(
                     decoration: BoxDecoration(
                       color: isSelected[0] ? Colors.blue : Colors.transparent,

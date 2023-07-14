@@ -3,9 +3,18 @@
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:assessment_app/screens/home.dart';
+import 'package:assessment_app/questions/Q1.dart';
+import 'package:assessment_app/screens/results.dart';
 
 class Q43 extends StatefulWidget {
-  const Q43({super.key});
+  final int questionsAnswered;
+  final int correctAnswer;
+
+  const Q43({
+    Key? key,
+    required this.questionsAnswered,
+    required this.correctAnswer,
+  }) : super(key: key);
 
   @override
   TestPageState createState() => TestPageState();
@@ -26,6 +35,13 @@ class TestPageState extends State<Q43> {
       enable = true;
     }
     setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    questionsAnswered = widget.questionsAnswered;
+    correctAnswer = widget.correctAnswer;
   }
 
   @override
@@ -54,14 +70,6 @@ class TestPageState extends State<Q43> {
                       isSelected[1] = false;
                       isSelected[2] = false;
                       enable = true;
-                    });
-                  },
-                  onTapCancel: () {
-                    setState(() {
-                      isSelected[0] = false;
-                      isSelected[1] = false;
-                      isSelected[2] = false;
-                      enable = false;
                     });
                   },
                   child: Container(
@@ -165,12 +173,18 @@ class TestPageState extends State<Q43> {
                                       TextButton(
                                         child: const Text('是'),
                                         onPressed: () {
+                                          questionsAnswered++;
                                           Navigator.pushAndRemoveUntil<void>(
                                               context,
                                               MaterialPageRoute<void>(
                                                   builder:
                                                       (BuildContext context) =>
-                                                          const Q43()),
+                                                          Results(
+                                                            questionsAnswered:
+                                                                questionsAnswered,
+                                                            correctAnswer:
+                                                                correctAnswer,
+                                                          )),
                                               ModalRoute.withName('/'));
                                         },
                                       ),

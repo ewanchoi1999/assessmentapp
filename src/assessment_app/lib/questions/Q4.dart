@@ -4,10 +4,17 @@ import 'package:assessment_app/questions/Q5.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:assessment_app/screens/home.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:assessment_app/questions/Q1.dart';
 
 class Q4 extends StatefulWidget {
-  const Q4({super.key});
+  final int questionsAnswered;
+  final int correctAnswer;
+
+  const Q4({
+    Key? key,
+    required this.questionsAnswered,
+    required this.correctAnswer,
+  }) : super(key: key);
 
   @override
   TestPageState createState() => TestPageState();
@@ -17,13 +24,6 @@ class TestPageState extends State<Q4> {
   static const String appBarTitle = '語法理解';
   // ignore: unused_field
 
-  int score = 0; //score for assessment in future
-
-  void incScore() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    int newscore = score + 1;
-    prefs.setInt('score', newscore);
-  }
   //score for assessment in future
 
   bool enable =
@@ -35,6 +35,13 @@ class TestPageState extends State<Q4> {
       enable = true;
     }
     setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    questionsAnswered = widget.questionsAnswered;
+    correctAnswer = widget.correctAnswer;
   }
 
   @override
@@ -64,15 +71,6 @@ class TestPageState extends State<Q4> {
                       isSelected[2] = false;
                       enable = true;
                     });
-                  },
-                  onTapCancel: () {
-                    setState(() {
-                      isSelected[0] = false;
-                      isSelected[1] = false;
-                      isSelected[2] = false;
-                      enable = false;
-                    });
-                    incScore();
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -175,12 +173,18 @@ class TestPageState extends State<Q4> {
                                       TextButton(
                                         child: const Text('是'),
                                         onPressed: () {
+                                          questionsAnswered++;
                                           Navigator.pushAndRemoveUntil<void>(
                                               context,
                                               MaterialPageRoute<void>(
                                                   builder:
                                                       (BuildContext context) =>
-                                                          const Q5()),
+                                                          Q5(
+                                                            questionsAnswered:
+                                                                questionsAnswered,
+                                                            correctAnswer:
+                                                                correctAnswer,
+                                                          )),
                                               ModalRoute.withName('/'));
                                         },
                                       ),
